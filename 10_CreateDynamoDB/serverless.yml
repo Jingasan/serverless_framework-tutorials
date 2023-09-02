@@ -1,0 +1,56 @@
+service: dynamo-db
+frameworkVersion: '2 || 3'
+
+provider:
+  name: aws
+  stage: prod
+  region: ap-northeast-1
+  timeout: 30
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:*'
+      Resource:
+        - '*'
+
+resources:
+  Resources:
+    Movies:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Movies
+        AttributeDefinitions:
+          - AttributeName: year
+            AttributeType: N
+          - AttributeName: title
+            AttributeType: S
+          - AttributeName: price
+            AttributeType: S
+        KeySchema:
+          - AttributeName: year
+            KeyType: HASH
+          - AttributeName: title
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 10
+          WriteCapacityUnits: 10
+        GlobalSecondaryIndexes:
+          - IndexName: price-index
+            KeySchema:
+              - AttributeName: price
+                KeyType: HASH
+            Projection:
+              ProjectionType: KEYS_ONLY
+            ProvisionedThroughput:
+              ReadCapacityUnits: 10
+              WriteCapacityUnits: 10
+
+functions:
+  access:
+    handler: handler.access
+    description: AWS SDK for Nodejs DynamoDB sample
+    events:
+      - http:
+          path: access
+          method: post
+          cors: true

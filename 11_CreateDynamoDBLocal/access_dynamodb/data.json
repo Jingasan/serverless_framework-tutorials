@@ -1,0 +1,35 @@
+{
+	"students": [
+		{
+			"PutRequest": {
+				"Item": {
+					"id": {"S": "000"},
+					"name": {"S": "Ichiro"},
+					"age": {"N": "12"},
+					"hometown": {"S": "Tokyo"}
+				}
+			}
+		},
+		{
+			"PutRequest": {
+				"Item": {
+					"id": {"S": "001"},
+					"name": {"S": "Jiro"},
+					"age": {"N": "14"},
+					"hometown": {"S": "Chiba"},
+					"hobby": {"S": "table tennis"}
+				}
+			}
+		},
+		{
+			"PutRequest": {
+				"Item": {
+					"id": {"S": "002"},
+					"name": {"S": "Saburo"},
+					"age": {"N": "12"},
+					"hometown": {"S": "Kanagawa"}
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,4 @@
+/dynamodb
+/.dynamodb
+/serverless/.serverless
+/serverless/node_modules

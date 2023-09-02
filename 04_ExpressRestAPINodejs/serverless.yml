@@ -1,0 +1,22 @@
+service: express-restapi-nodejs
+frameworkVersion: "2 || 3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: v1
+  region: ap-northeast-1
+  timeout: 30
+
+functions:
+  func:
+    handler: handler.main
+    description: "ユーザー情報のCRUD(Create/Read/Update/Delete)関数"
+    events:
+      - http:
+          path: /users/{proxy+}
+          # すべてのメソッドを有効化
+          method: ANY
+          # cors: trueの設定を入れると、
+          # prefligntリクエストへのレスポンスを返すようになる。
+          cors: true

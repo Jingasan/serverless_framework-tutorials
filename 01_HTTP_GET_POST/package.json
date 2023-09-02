@@ -1,0 +1,14 @@
+{
+  "name": "http_get_post",
+  "version": "1.0.0",
+  "description": "This is HTTP GET/POST method function sample.",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless": "^3.34.0"
+  }
+}

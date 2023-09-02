@@ -1,0 +1,27 @@
+service: envvalue
+frameworkVersion: "2 || 3"
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  lambdaHashingVersion: 20201221
+  stage: offline
+  region: ap-northeast-1
+
+functions:
+  main:
+    handler: handler.main
+    description: Echo env with GET method
+    events:
+      - http:
+          path: main
+          method: get
+          cors: true
+    environment:
+      ENV_VAL: ${env:ENV_VAL}
+      ENV_JSON_VAL: ${file(./env.json):ENV_JSON_VAL}
+      ENV_YAML_VAL: ${file(./env.yaml):ENV_YAML_VAL}
+
+plugins:
+  - serverless-offline

@@ -1,0 +1,15 @@
+{
+  "name": "createdynamodb",
+  "version": "1.0.0",
+  "description": "Create DynamoDB",
+  "main": "handler.js",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^3.34.0"
+  }
+}

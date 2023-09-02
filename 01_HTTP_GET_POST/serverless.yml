@@ -1,0 +1,27 @@
+service: echo
+frameworkVersion: '2 || 3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  stage: prod
+  region: ap-northeast-1
+
+functions:
+  echo1:
+    handler: handler.echo1
+    description: Echo with GET method
+    events:
+      - http:
+          path: echo
+          method: get
+          cors: true
+  echo2:
+    handler: handler.echo2
+    description: Echo with POST method
+    events:
+      - http:
+          path: echo
+          method: post
+          cors: true

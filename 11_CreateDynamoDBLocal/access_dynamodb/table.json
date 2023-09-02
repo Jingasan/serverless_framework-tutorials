@@ -1,0 +1,31 @@
+{
+	"TableName": "students",
+	"AttributeDefinitions": [
+		{"AttributeName": "id", "AttributeType": "S"},
+		{"AttributeName": "name", "AttributeType": "S"},
+		{"AttributeName": "age", "AttributeType": "N"}
+	],
+	"KeySchema": [
+		{"AttributeName": "id","KeyType": "HASH"},
+		{"AttributeName": "age","KeyType": "RANGE"}
+	],
+	"ProvisionedThroughput": {
+		"ReadCapacityUnits": 5,
+		"WriteCapacityUnits": 5
+	},
+	"GlobalSecondaryIndexes": [
+		{
+			"IndexName": "name-index",
+			"KeySchema": [
+				{"AttributeName": "name", "KeyType": "HASH"}
+			],
+			"Projection": {
+				"ProjectionType": "KEYS_ONLY"
+			},
+			"ProvisionedThroughput": {
+				"ReadCapacityUnits": 5,
+				"WriteCapacityUnits": 5
+			}
+		}
+	]
+}

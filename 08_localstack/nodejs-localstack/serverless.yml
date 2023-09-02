@@ -1,0 +1,46 @@
+service: aws-nodejs-project
+frameworkVersion: '2 || 3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+  profile: localstack
+
+resources:
+  Resources:
+    IfxTestBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ifx-test-bucket
+        AccessControl: PublicRead
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+          cors: true
+
+plugins:
+  - serverless-localstack
+custom:
+  localstack:
+    stages:
+      - local

@@ -1,0 +1,43 @@
+service: SQS-FIFO-Queue
+frameworkVersion: "2 || 3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  lambdaHashingVersion: 20201221
+  stage: prod
+  region: ap-northeast-1
+  timeout: 10
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "sqs:*"
+      Resource:
+        - "*"
+
+resources:
+  Resources:
+    NewSQS:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: "TestQueue.fifo"
+        ContentBasedDeduplication: true
+        FifoQueue: true
+
+functions:
+  send:
+    handler: handler.send
+    description: AWS SDK for Nodejs SQS Sender sample
+    events:
+      - http:
+          path: send
+          method: post
+          cors: true
+  receive:
+    handler: handler.receive
+    description: AWS SDK for Nodejs SQS Receiver sample
+    events:
+      - http:
+          path: receive
+          method: get
+          cors: true
