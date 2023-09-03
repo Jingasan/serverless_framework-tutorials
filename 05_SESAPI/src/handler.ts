@@ -18,7 +18,7 @@ app.use(cors());
 app.get("/", async (_req: Request, res: Response, _next: NextFunction) => {
   // 送信メールコンテンツ
   const mailContent: SES.SendEmailCommandInput = {
-    FromEmailAddress: "from@gmail.com",
+    FromEmailAddress: "from@gmail.com", // 事前にSESの設定をしておくこと
     Destination: {
       ToAddresses: ["to@gmail.com"],
       CcAddresses: [],
