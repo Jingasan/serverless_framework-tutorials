@@ -3,15 +3,12 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import * as sourceMapSupport from "source-map-support";
-import {
-  SESv2Client,
-  SendEmailCommand,
-  SendEmailCommandInput,
-} from "@aws-sdk/client-sesv2";
-const app: Application = express();
-const sesClient = new SESv2Client();
+import * as SES from "./sesConnector";
 // SourceMapを有効化
 sourceMapSupport.install();
+// 初期化
+const app: Application = express();
+const sesConnector = new SES.SESConnector();
 // リクエストボディのパース用設定
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,8 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 // GET
 app.get("/", async (_req: Request, res: Response, _next: NextFunction) => {
-  // メールコンテンツ
-  const input: SendEmailCommandInput = {
+  // 送信メールコンテンツ
+  const mailContent: SES.SendEmailCommandInput = {
     FromEmailAddress: "from@gmail.com",
     Destination: {
       ToAddresses: ["to@gmail.com"],
@@ -42,7 +39,7 @@ app.get("/", async (_req: Request, res: Response, _next: NextFunction) => {
   };
   try {
     // メール送信
-    const result = await sesClient.send(new SendEmailCommand(input));
+    const result = await sesConnector.sendEmail(mailContent);
     console.log(result);
     return res.status(200).json("Success");
   } catch (err) {

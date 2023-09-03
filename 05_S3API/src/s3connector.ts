@@ -1,5 +1,5 @@
 import * as S3 from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import * as S3RequestPresigner from "@aws-sdk/s3-request-presigner";
 
 // Bucket Policy の設定型
 export type PutBucketPolicyCommandInput = S3.PutBucketPolicyCommandInput;
@@ -175,7 +175,7 @@ export class S3Connector {
         Key: key,
         Body: JSON.stringify(json),
       };
-      const url = await getSignedUrl(
+      const url = await S3RequestPresigner.getSignedUrl(
         this.s3client,
         new S3.PutObjectCommand(putObjectParam),
         {

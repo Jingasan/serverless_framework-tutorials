@@ -4,10 +4,12 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import * as sourceMapSupport from "source-map-support";
 import { v4 as uuidv4 } from "uuid";
-import { S3Connector } from "./s3connector";
-const app: Application = express();
+import * as S3 from "./s3connector";
 // SourceMapを有効化
 sourceMapSupport.install();
+// 初期化
+const app: Application = express();
+const s3connector = new S3.S3Connector();
 // リクエストボディのパース用設定
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,7 +18,6 @@ app.use(cors());
 // GET
 app.get("/", async (_req: Request, res: Response, _next: NextFunction) => {
   const bucketName = "test-bucket-" + uuidv4();
-  const s3connector = new S3Connector();
 
   // S3バケットの作成
   console.log(">>> Create bucket");
