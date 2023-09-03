@@ -37,14 +37,9 @@ app.get("/", async (_req: Request, res: Response, _next: NextFunction) => {
       },
     },
   };
-  try {
-    // メール送信
-    const result = await sesConnector.sendEmail(mailContent);
-    console.log(result);
-    return res.status(200).json("Success");
-  } catch (err) {
-    console.error(err);
-    return res.status(503).json("Failed");
-  }
+  // メール送信
+  const result = await sesConnector.sendEmail(mailContent);
+  if (!result) return res.status(503).json("Failed");
+  return res.status(200).json("Success");
 });
 export const handler = serverlessExpress({ app });
