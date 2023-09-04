@@ -14,16 +14,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // CORS
 app.use(cors());
+// DBの設定
+const dbName = "postgres";
+const tableName = "test";
 // GET
 app.get("/", async (_req: Request, res: Response, _next: NextFunction) => {
-  const dbName = "postgres";
-  const tableName = "test";
   // RDSとの接続初期化
   if (!(await rdsConnector.initConnectionSequelize(dbName))) {
     return res.status(503).json("Failure");
   }
   // SQLの実行
-  const sql = `select * from public.${tableName}`;
+  //const sql = `select * from public.${tableName}`;
+  const sql = `show all`;
   console.log("ExecutionSQL: " + sql);
   const result = await rdsConnector.runSQLSequelize(sql);
   if (!result) {
