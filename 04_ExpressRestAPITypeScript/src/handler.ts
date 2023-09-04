@@ -64,4 +64,5 @@ app.use(
   }
 );
 
+// 関数のエンドポイント
 export const handler = serverlessExpress({ app });

@@ -2,6 +2,7 @@ import * as SM from "@aws-sdk/client-secrets-manager";
 import * as Sequelize from "sequelize";
 import * as PG from "pg";
 
+// RDSのシークレット型
 type RDSSecret = {
   engine: string;
   dbInstance: string;
@@ -24,10 +25,13 @@ export class RDSConnector {
   }
 
   // RDS接続のためのシークレットの取得
-  private getRDSSecret = async (): Promise<RDSSecret | false> => {
+  private getRDSSecret = async (
+    secretId: string
+  ): Promise<RDSSecret | false> => {
     try {
+      // RDS接続のためのシークレットの取得
       const secret = await this.smClient.getSecretValue({
-        SecretId: "test-postgres-secret",
+        SecretId: secretId, // シークレットID
       });
       if (!secret.SecretString) {
         console.log("!secret.SecretString");
@@ -50,8 +54,11 @@ export class RDSConnector {
   };
 
   // DBコネクションの初期化（Sequelizeの場合）
-  public initConnectionSequelize = async (dbName: string): Promise<boolean> => {
-    const secret = await this.getRDSSecret();
+  public initConnectionSequelize = async (
+    secretId: string,
+    dbName: string
+  ): Promise<boolean> => {
+    const secret = await this.getRDSSecret(secretId);
     if (!secret) return false;
     try {
       this.sequelize = new Sequelize.Sequelize(
@@ -78,8 +85,11 @@ export class RDSConnector {
   };
 
   // DBコネクションの初期化（PGの場合）
-  public initConnectionPG = async (dbName: string): Promise<boolean> => {
-    const secret = await this.getRDSSecret();
+  public initConnectionPG = async (
+    secretId: string,
+    dbName: string
+  ): Promise<boolean> => {
+    const secret = await this.getRDSSecret(secretId);
     if (!secret) return false;
     try {
       this.pg = new PG.Client({

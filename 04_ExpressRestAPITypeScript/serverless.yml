@@ -4,31 +4,35 @@ frameworkVersion: "2 || 3"
 package:
   individually: true
 custom:
-  esbuild:
-    bundle: true
-    minify: true
-    sourcemap: true
-    exclude: ["aws-sdk"]
-    target: "node18"
+  esbuild: # esbuildの設定
+    bundle: true # コードのバンドルの設定
+    minify: true # コードの最小化の設定
+    sourcemap: true # SourceMapを有効化
+    exclude: ["@aws-sdk"] # 除くNPMパッケージ
+    target: "node18" # Nodeのバージョン
     platform: "node"
     concurrency: 10
+    watch:
+      pattern: ["src/**/*.ts"] # srcディレクトリ以下のTSのみを対象とする
+      ignore: [] # ビルド対象から無視するファイル
 
 provider:
-  name: aws
-  runtime: nodejs18.x
+  name: aws # デプロイ先のクラウドプロバイダ
+  runtime: nodejs18.x # Nodeのバージョン
+  region: ap-northeast-1 # Region
+  timeout: 30 # API Gatewayのタイムアウト時間
   stage: v1
-  region: ap-northeast-1
-  timeout: 30
 
 functions:
-  app:
-    handler: src/handler.handler
+  app: # 関数名
+    handler: src/handler.handler # 関数のエンドポイントの指定
+    description: "ユーザー情報のCRUD(Create/Read/Update/Delete)関数"
     events:
       - http:
-          method: ANY
-          path: "/users/{any+}"
-          cors: true
+          method: ANY # 有効化するHTTPメソッド（ANYはすべて許可）
+          path: "/users/{any+}" # 有効化するAPIのパス
+          cors: true # CORSの有効化：prefligntリクエストへのレスポンスを返すようになる
 
-plugins:
-  - serverless-esbuild
-  - serverless-offline
+plugins: # 利用するプラグイン
+  - serverless-esbuild # デプロイ時にesbuildでビルドするプラグイン
+  - serverless-offline # 関数をオフライン実行する関数
