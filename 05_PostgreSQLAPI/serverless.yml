@@ -1,0 +1,40 @@
+service: postgresql-api
+frameworkVersion: "2 || 3"
+
+package:
+  individually: true
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    #exclude: ["@aws-sdk"]
+    target: "node18"
+    platform: "node"
+    concurrency: 10
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: v1
+  region: ap-northeast-1
+  timeout: 30
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - rds:*
+        - secretsmanager:*
+      Resource: "*"
+
+functions:
+  app:
+    handler: src/handler.handler
+    events:
+      - http:
+          method: ANY
+          path: "/"
+          cors: true
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
