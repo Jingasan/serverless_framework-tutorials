@@ -50,12 +50,12 @@ export class RDSConnector {
   };
 
   // DBコネクションの初期化（Sequelizeの場合）
-  public initConnectionSequelize = async (): Promise<boolean> => {
+  public initConnectionSequelize = async (dbName: string): Promise<boolean> => {
     const secret = await this.getRDSSecret();
     if (!secret) return false;
     try {
       this.sequelize = new Sequelize.Sequelize(
-        "postgres",
+        dbName,
         secret.username,
         secret.password,
         {
@@ -78,12 +78,12 @@ export class RDSConnector {
   };
 
   // DBコネクションの初期化（PGの場合）
-  public initConnectionPG = async (): Promise<boolean> => {
+  public initConnectionPG = async (dbName: string): Promise<boolean> => {
     const secret = await this.getRDSSecret();
     if (!secret) return false;
     try {
       this.pg = new PG.Client({
-        database: "postgres",
+        database: dbName,
         user: secret.username,
         password: secret.password,
         host: secret.host,
@@ -113,7 +113,7 @@ export class RDSConnector {
   };
 
   // SQLの実行（PGの場合）
-  public runSQL = async (sql: string): Promise<any | false> => {
+  public runSQLPG = async (sql: string): Promise<any | false> => {
     try {
       const res = await this.pg.query(sql);
       console.log(res);
