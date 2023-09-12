@@ -1,4 +1,4 @@
-service: postgresql-api
+service: postgres-private-api
 frameworkVersion: "2 || 3"
 
 package:
@@ -7,7 +7,7 @@ custom:
   esbuild: # esbuildの設定
     bundle: true # コードのバンドルの設定
     minify: true # コードの最小化の設定
-    sourcemap: true # SourceMapを有効化
+    sourcemap: false # SourceMapを有効化
     exclude: ["@aws-sdk"] # 除くNPMパッケージ
     target: "node18" # Nodeのバージョン
     platform: "node"
@@ -22,12 +22,25 @@ provider:
   region: ap-northeast-1 # Region
   timeout: 30 # API Gatewayのタイムアウト時間
   stage: v1
+  vpc: # LambdaへのVPC設定
+    securityGroupIds: # VPCのセキュリティグループID
+      - <VPCのセキュリティグループID>
+    subnetIds: # VPCのサブネットID
+      - <VPCのサブネットID>
   iamRoleStatements: # Lambdaに割り当てるIAMロール
     - Effect: "Allow"
       Action:
         - rds:* # RDSのすべての操作
         - secretsmanager:* # SecresManagerのすべての操作
+        - ec2:* # EC2のすべての操作
+        - logs:* # ログのすべての操作
       Resource: "*"
+    # Lambda関数からRDS ProxyへのIAM認証による接続設定
+    - Effect: "Allow"
+      Action:
+        - rds-db:connect
+      # RDS ProxyのArnを指定
+      Resource: "<RDS ProxyのArn>/*"
 
 functions:
   app: # 関数名
