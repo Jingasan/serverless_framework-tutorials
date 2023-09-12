@@ -1,7 +1,7 @@
 {
   "name": "postgresql-api",
   "version": "1.0.0",
-  "description": "Send email with Amazon SES",
+  "description": "Run SQL",
   "scripts": {
     "deploy": "serverless deploy",
     "remove": "serverless remove",
